@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Terms — Learn Stock Market</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#00ff88;--blue:#00ccff;--red:#ff4444;--orange:#ffa500;--gold:#ffd700;
+  --bg:#080c18;--bg2:#0d1526;--bg3:#111d35;--border:#1a2a4a;
+  --text:#c0d0e0;--dim:#445566;--vdim:#2a3a4a;
+}
+body{font-family:'Courier New',monospace;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ── TICKER ── */
+.ticker-wrap{background:var(--bg2);border-bottom:1px solid var(--border);overflow:hidden;padding:7px 0}
+.ticker-track{display:inline-flex;animation:ticker 40s linear infinite;white-space:nowrap}
+.ticker-track:hover{animation-play-state:paused}
+.tick{display:inline-flex;align-items:center;gap:6px;margin:0 28px;font-size:12px}
+.tick-sym{color:var(--green);font-weight:700}
+.tick-px{color:#fff}
+.tick-up{color:var(--green)}
+.tick-dn{color:var(--red)}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── HEADER ── */
+.hdr{text-align:center;padding:28px 20px 16px;background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%)}
+.hdr h1{font-size:clamp(1.6em,4vw,2.6em);color:var(--green);letter-spacing:4px;text-shadow:0 0 24px rgba(0,255,136,.3)}
+.hdr p{color:var(--dim);font-size:.85em;margin-top:4px;letter-spacing:1px}
+
+/* ── STATS BAR ── */
+.stats{display:flex;justify-content:center;flex-wrap:wrap;gap:0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stat{padding:12px 24px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat-v{font-size:1.4em;font-weight:700;color:var(--green)}
+.stat-l{font-size:.65em;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+
+/* ── TABS ── */
+.tabs{display:flex;justify-content:center;gap:8px;padding:18px 16px 8px;flex-wrap:wrap}
+.tab{background:var(--bg2);border:1px solid var(--border);color:var(--dim);padding:10px 24px;cursor:pointer;font-family:inherit;font-size:.8em;letter-spacing:2px;text-transform:uppercase;transition:.25s;border-radius:4px}
+.tab:hover{border-color:var(--green);color:var(--green)}
+.tab.on{background:var(--green);border-color:var(--green);color:var(--bg);font-weight:700}
+
+/* ── WRAP ── */
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+
+/* ── FLASHCARDS ── */
+.fc-meta{display:flex;justify-content:space-between;align-items:center;max-width:700px;margin:0 auto 8px;font-size:.75em;color:var(--dim);letter-spacing:1px}
+.pbar{height:3px;background:var(--vdim);border-radius:2px;overflow:hidden;max-width:700px;margin:0 auto 18px}
+.pfill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .5s ease}
+.fc-wrap{perspective:1200px;max-width:700px;margin:0 auto}
+.fc{height:290px;cursor:pointer;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.175,.885,.32,1.275);position:relative;border-radius:14px}
+.fc.flip{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center}
+.front{background:linear-gradient(135deg,#0b1020,#0f1a30);border:2px solid #1a3060}
+.front::after{content:'CLICK TO REVEAL ▾';position:absolute;bottom:14px;font-size:.6em;color:var(--vdim);letter-spacing:2px}
+.back{background:linear-gradient(135deg,#081a0e,#0c2214);border:2px solid #1a4830;transform:rotateY(180deg)}
+.fc-cat{font-size:.65em;color:var(--dim);text-transform:uppercase;letter-spacing:3px;margin-bottom:10px}
+.fc-term{font-size:clamp(1.3em,3vw,2em);font-weight:700;color:var(--blue);text-shadow:0 0 14px rgba(0,200,255,.3);line-height:1.25}
+.fc-def{font-size:.9em;color:#b0d0b8;line-height:1.75;max-width:560px}
+.fc-eg{margin-top:12px;font-size:.78em;color:var(--dim);font-style:italic;border-top:1px solid #1a3a1a;padding-top:10px;line-height:1.6}
+
+.fc-btns{display:flex;align-items:center;gap:10px;max-width:700px;margin:16px auto 4px;flex-wrap:wrap;justify-content:center}
+.cbtn{padding:9px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.78em;letter-spacing:1px;font-weight:600;transition:.2s;border:1px solid}
+.know{background:rgba(0,255,136,.08);border-color:var(--green);color:var(--green)}
+.know:hover{background:var(--green);color:var(--bg)}
+.nope{background:rgba(255,68,68,.08);border-color:var(--red);color:var(--red)}
+.nope:hover{background:var(--red);color:#fff}
+.navb{width:46px;height:46px;border-radius:50%;border:1px solid var(--border);background:var(--bg2);color:var(--green);cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;transition:.2s}
+.navb:hover{background:var(--green);color:var(--bg);border-color:var(--green);transform:scale(1.1)}
+.shuf{background:transparent;border:1px solid var(--vdim);color:var(--dim);padding:7px 14px;border-radius:20px;cursor:pointer;font-family:inherit;font-size:.72em;letter-spacing:1px;transition:.2s}
+.shuf:hover{border-color:var(--orange);color:var(--orange)}
+.kbd-hint{text-align:center;color:var(--vdim);font-size:.7em;padding:12px 0 0;letter-spacing:.5px}
+kbd{background:var(--bg2);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:var(--dim);font-family:inherit;font-size:.9em}
+
+/* ── QUIZ ── */
+.q-hdr{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.q-score{font-size:.85em;color:var(--dim)}
+.q-score span{color:var(--green);font-size:1.25em;font-weight:700}
+.streak{display:flex;align-items:center;gap:5px;font-size:.85em}
+.streak-n{color:var(--orange);font-weight:700;font-size:1.2em}
+.qcard{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:26px;margin-bottom:16px}
+.qlbl{font-size:.65em;color:var(--vdim);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.qbadge{display:inline-block;background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);color:var(--blue);font-size:.62em;padding:2px 9px;border-radius:10px;margin-bottom:12px;letter-spacing:1px}
+.qtxt{font-size:1em;color:#c0d0ff;line-height:1.75}
+.qopts{display:grid;gap:9px}
+.qopt{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:13px 18px;cursor:pointer;font-family:inherit;font-size:.9em;color:var(--text);text-align:left;display:flex;gap:12px;align-items:flex-start;transition:.2s}
+.qopt:hover:not(.dis){border-color:var(--blue);background:rgba(0,200,255,.04);color:#fff}
+.qopt:hover:not(.dis) .ol{color:var(--blue)}
+.ol{color:var(--vdim);font-size:.82em;min-width:18px;transition:color .2s;padding-top:1px}
+.qopt.ok{border-color:var(--green);background:rgba(0,255,136,.08);color:var(--green)}
+.qopt.ok .ol{color:var(--green)}
+.qopt.bad{border-color:var(--red);background:rgba(255,68,68,.08);color:var(--red)}
+.qopt.bad .ol{color:var(--red)}
+.qopt.dis{cursor:default}
+.qfb{border-radius:8px;padding:16px 20px;margin-top:13px;display:none;animation:fadeUp .3s ease}
+.qfb.ok{border:1px solid rgba(0,255,136,.2);background:rgba(0,255,136,.04)}
+.qfb.bad{border:1px solid rgba(255,68,68,.2);background:rgba(255,68,68,.04)}
+.fbh{font-size:.95em;font-weight:700;margin-bottom:6px}
+.fbh.ok{color:var(--green)}
+.fbh.bad{color:var(--red)}
+.fbt{font-size:.82em;color:var(--dim);line-height:1.65}
+.nxtbtn{background:var(--green);border:none;color:var(--bg);padding:11px 28px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.88em;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:14px;display:none;transition:.2s}
+.nxtbtn:hover{background:#00cc66;transform:scale(1.02)}
+/* Quiz complete */
+.qend{text-align:center;padding:36px 20px;animation:fadeUp .5s ease}
+.qend h2{font-size:1.8em;color:var(--green);margin-bottom:8px}
+.qend .big{font-size:3.5em;font-weight:700;color:var(--blue);margin:14px 0}
+.qend .grade{font-size:1.1em;margin-bottom:16px}
+.rbtn{background:var(--bg2);border:1px solid var(--green);color:var(--green);padding:11px 24px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.85em;letter-spacing:2px;text-transform:uppercase;transition:.2s;margin:5px}
+.rbtn:hover{background:var(--green);color:var(--bg)}
+
+/* ── BROWSE ── */
+.srch-wrap{position:relative;margin-bottom:14px}
+.srch-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--dim)}
+.srch{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:13px 13px 13px 38px;border-radius:8px;font-family:inherit;font-size:.9em;outline:none;transition:border-color .2s}
+.srch:focus{border-color:var(--blue)}
+.srch::placeholder{color:var(--vdim)}
+.catf{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.catbtn{background:var(--bg2);border:1px solid var(--border);color:var(--dim);padding:4px 12px;border-radius:14px;cursor:pointer;font-family:inherit;font-size:.72em;letter-spacing:1px;transition:.2s}
+.catbtn:hover,.catbtn.on{border-color:var(--blue);color:var(--blue);background:rgba(0,200,255,.05)}
+.terms{display:grid;gap:8px}
+.tc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;cursor:pointer;transition:.25s}
+.tc:hover{border-color:rgba(0,200,255,.3);background:var(--bg3);transform:translateX(3px)}
+.tc.open{border-color:rgba(0,255,136,.25);background:#0a1c0e}
+.tc-hdr{display:flex;justify-content:space-between;align-items:center}
+.tc-name{color:var(--blue);font-size:.95em;font-weight:700}
+.tc-arr{color:var(--dim);font-size:.75em;transition:transform .3s}
+.tc.open .tc-arr{transform:rotate(90deg);color:var(--green)}
+.tc-body{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s}
+.tc.open .tc-body{max-height:250px;padding-top:11px}
+.tc-txt{color:#8ab;font-size:.85em;line-height:1.75;border-top:1px solid var(--border);padding-top:11px}
+.tc-tag{display:inline-block;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.25);color:var(--orange);font-size:.65em;padding:1px 7px;border-radius:8px;margin-bottom:8px;letter-spacing:1px}
+.no-results{text-align:center;color:var(--dim);padding:32px;font-size:.9em}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+.slide{animation:slideIn .28s ease}
+
+/* ── FLASH OVERLAY ── */
+.flash{position:fixed;inset:0;pointer-events:none;opacity:0;z-index:999}
+.flash.go-green{background:rgba(0,255,136,.12);animation:flashAnim .45s ease}
+.flash.go-red{background:rgba(255,68,68,.12);animation:flashAnim .45s ease}
+@keyframes flashAnim{0%{opacity:1}100%{opacity:0}}
+
+@media(max-width:580px){
+  .face{padding:20px}.fc-def{font-size:.82em}.fc{height:310px}
+  .stat{padding:10px 14px}.stat-v{font-size:1.2em}
+}
+</style>
+</head>
+<body>
+
+<div class="flash" id="flash"></div>
+
+<!-- Ticker -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<!-- Header -->
+<div class="hdr">
+  <h1>MARKET TERMS</h1>
+  <p>Master 72 essential stock market concepts</p>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat"><div class="stat-v">72</div><div class="stat-l">Total Terms</div></div>
+  <div class="stat"><div class="stat-v" id="sKnown">0</div><div class="stat-l">Mastered</div></div>
+  <div class="stat"><div class="stat-v" id="sStreak">0</div><div class="stat-l">Best Streak</div></div>
+  <div class="stat"><div class="stat-v" id="sScore">—</div><div class="stat-l">Quiz Score</div></div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab on" onclick="go('fc')">📇 Flashcards</button>
+  <button class="tab" onclick="go('quiz')">🧠 Quiz</button>
+  <button class="tab" onclick="go('browse')">🔍 Browse</button>
+</div>
+
+<div class="wrap">
+
+  <!-- ══ FLASHCARD MODE ══ -->
+  <div id="fc">
+    <div class="fc-meta">
+      <span id="fcCounter">CARD 1 OF 72</span>
+      <span id="fcKnown" style="color:var(--green)">0 mastered</span>
+    </div>
+    <div class="pbar"><div class="pfill" id="fcBar" style="width:1.4%"></div></div>
+
+    <div class="fc-wrap">
+      <div class="fc" id="card" onclick="flip()">
+        <div class="face front">
+          <div class="fc-cat" id="fCat">CATEGORY</div>
+          <div class="fc-term" id="fTerm">Loading…</div>
+        </div>
+        <div class="face back">
+          <div class="fc-def" id="fDef"></div>
+          <div class="fc-eg" id="fEg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-btns">
+      <button class="cbtn nope" onclick="mark(false)">✗ Still Learning</button>
+      <button class="navb" onclick="prev()">◀</button>
+      <button class="navb" onclick="next()">▶</button>
+      <button class="cbtn know" onclick="mark(true)">✓ Got It</button>
+    </div>
+    <div style="text-align:center;margin-top:8px">
+      <button class="shuf" onclick="shuffle()">⇌ SHUFFLE DECK</button>
+    </div>
+    <div class="kbd-hint">
+      <kbd>←</kbd> Prev &nbsp; <kbd>→</kbd> Next &nbsp; <kbd>Space</kbd> Flip &nbsp;
+      <kbd>G</kbd> Got it &nbsp; <kbd>S</kbd> Still learning
+    </div>
+  </div>
+
+  <!-- ══ QUIZ MODE ══ -->
+  <div id="quiz" style="display:none">
+    <div style="max-width:700px;margin:0 auto">
+      <div class="q-hdr">
+        <div class="q-score">Score: <span id="qScoreTxt">0/0</span></div>
+        <div class="streak">🔥 <span class="streak-n" id="qStreakN">0</span><span style="color:var(--dim);font-size:.8em"> streak</span></div>
+        <div style="width:180px"><div class="pbar" style="margin:0"><div class="pfill" id="qBar" style="width:0%"></div></div></div>
+      </div>
+      <div id="qBody"></div>
+    </div>
+  </div>
+
+  <!-- ══ BROWSE MODE ══ -->
+  <div id="browse" style="display:none">
+    <div style="max-width:800px;margin:0 auto">
+      <div class="srch-wrap">
+        <span class="srch-icon">🔍</span>
+        <input class="srch" id="srch" type="text" placeholder="Search terms, definitions, categories…" oninput="filterBrowse()">
+      </div>
+      <div class="catf" id="catf"></div>
+      <div class="terms" id="termsGrid"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════
+const T=[
+{t:"Arbitrage",c:"Trading Strategies",d:"The practice of simultaneously buying and selling the same asset in different markets to profit from temporary price differences with little or no risk.",e:"A trader buys gold at $1,800/oz on one exchange and instantly sells it for $1,802/oz on another, pocketing the $2 spread risk-free."},
+{t:"Ask",c:"Order Types",d:"The lowest price a seller is willing to accept for a security. If you want to buy immediately, you pay the Ask price.",e:"If the ask on Apple is $182.50, that's the minimum sellers accept — pay it and your order fills instantly."},
+{t:"Asset Allocation",c:"Portfolio Management",d:"The strategy of dividing a portfolio among different asset categories — stocks, bonds, cash, real estate — based on your goals, risk tolerance, and time horizon.",e:"A 30-year-old might go 80% stocks / 20% bonds; a retiree might flip that ratio to prioritize stability."},
+{t:"Asset Classes",c:"Fundamentals",d:"Groups of investments that share similar characteristics and behave similarly in the market. The main classes are equities, fixed income (bonds), real estate, commodities, and cash equivalents.",e:"During recessions, bonds often rise while stocks fall — that's why owning multiple asset classes reduces overall portfolio risk."},
+{t:"Averaging Down",c:"Trading Strategies",d:"Buying additional shares of a stock as its price declines, which lowers your average cost per share. Risky if the company is deteriorating, rewarding if the dip is temporary.",e:"You buy 10 shares at $100. Price drops to $80, so you buy 10 more. Average cost is now $90/share, so a recovery to $95 puts you back in the green."},
+{t:"Bear Market",c:"Market Conditions",d:"A market condition where prices fall 20% or more from recent highs, typically accompanied by widespread pessimism, economic slowdown, and declining investor confidence.",e:"The S&P 500 dropped ~34% in just 33 days (Feb–March 2020) — a swift bear market triggered by COVID-19 fears."},
+{t:"Beta",c:"Risk & Analysis",d:"A measure of a stock's volatility relative to the overall market. Beta of 1 = moves with the market. Beta > 1 = more volatile. Beta < 1 = more stable.",e:"A tech stock with Beta 1.5 tends to rise 15% when the market gains 10% — but also falls 15% when the market drops 10%."},
+{t:"Bid",c:"Order Types",d:"The highest price a buyer is willing to pay for a security. If you want to sell immediately, you receive the Bid price.",e:"If the bid is $182.40, that's what buyers currently offer — sell now and you receive $182.40 per share."},
+{t:"Bid-Ask Spread",c:"Order Types",d:"The difference between the Ask (lowest seller price) and the Bid (highest buyer price). Narrow spread = high liquidity. Wide spread = low liquidity and higher trading cost.",e:"Bid $50.00 / Ask $50.10 = $0.10 spread. Liquid mega-caps have penny spreads; thinly traded small-caps may have spreads of several dollars."},
+{t:"Blockchain",c:"Technology",d:"A decentralized digital ledger that records transactions across a network of computers in a way that is secure, transparent, and virtually impossible to alter.",e:"Every Bitcoin transaction is permanently logged on the blockchain — visible to anyone, controlled by no single bank or government."},
+{t:"Blue-Chip Stocks",c:"Stock Types",d:"Shares of large, well-established, financially stable companies with long track records of reliable performance, often paying steady dividends.",e:"Apple, Johnson & Johnson, and Coca-Cola are blue-chips — they've survived recessions, paid dividends for decades, and dominate their industries."},
+{t:"Bond",c:"Asset Classes",d:"A fixed-income security where an investor loans money to a borrower (government or corporation) in exchange for regular interest payments (coupons) and repayment of the principal at maturity.",e:"You buy a 10-year U.S. Treasury at $1,000 with a 4% coupon — the government pays $40/year and returns your $1,000 after 10 years."},
+{t:"Bull Market",c:"Market Conditions",d:"A market condition characterized by rising prices (typically 20%+ from recent lows), strong investor confidence, and generally expanding economic activity.",e:"The U.S. experienced its longest bull market from 2009–2020 — the S&P 500 surged over 400% during that 11-year run."},
+{t:"Buyback",c:"Corporate Actions",d:"When a company uses its cash to repurchase its own shares from the open market, reducing outstanding share count and often boosting earnings per share.",e:"Apple spent $90B+ buying back stock in 2023. Fewer shares outstanding means each remaining share represents a bigger slice of the company."},
+{t:"Capitalization (Market Cap)",c:"Valuation",d:"The total market value of a company's outstanding shares. Calculated as: Stock Price × Total Shares Outstanding. Used to classify companies as micro, small, mid, large, or mega cap.",e:"Amazon at $178/share × 10.3B shares = ~$1.83 trillion market cap — placing it firmly in mega-cap territory."},
+{t:"Capital Gains",c:"Taxes & Returns",d:"The profit realized when you sell an asset for more than you paid. Short-term gains (held < 1 year) are taxed as ordinary income; long-term gains (held > 1 year) receive preferential lower tax rates.",e:"Buy 100 shares at $50, sell at $80 — your capital gain is $3,000. Hold over a year first and you pay a lower long-term rate on that profit."},
+{t:"Common Stock",c:"Stock Types",d:"The most prevalent form of equity ownership. Common stockholders get voting rights at shareholder meetings and share in company growth, but are last in line during bankruptcy after bondholders and preferred shareholders.",e:"Buying Tesla shares on Nasdaq means owning common stock — you can vote on major decisions and benefit if Tesla's value grows."},
+{t:"Current Ratio",c:"Financial Ratios",d:"A liquidity metric measuring a company's ability to cover short-term obligations. Formula: Current Assets ÷ Current Liabilities. Ratios above 1.0 indicate the company can pay its near-term debts.",e:"$2M current assets ÷ $1M current liabilities = 2.0 current ratio — the company can cover its short-term debts twice over."},
+{t:"Day Trading",c:"Trading Strategies",d:"Buying and selling financial instruments within the same trading day to profit from short-term price movements. All positions are closed before market close to avoid overnight risk.",e:"A day trader buys 500 NVDA shares at 9:35 AM during a dip, then sells at 2:15 PM after a news-driven rally — never holding overnight."},
+{t:"Debt-to-Equity Ratio",c:"Financial Ratios",d:"A leverage ratio comparing total debt to shareholders' equity. Formula: Total Debt ÷ Shareholders' Equity. Higher D/E = more leverage = more financial risk, but also potentially higher returns.",e:"D/E of 2.0 means $2 of debt for every $1 of equity. Capital-heavy industries like utilities typically run higher D/E than asset-light tech firms."},
+{t:"Diversification",c:"Portfolio Management",d:"The strategy of spreading investments across different assets, sectors, geographies, and asset classes to reduce risk. When one investment falls, others may hold steady or rise.",e:"Instead of all $10K in tech, you split: $3K tech, $2K healthcare, $2K bonds, $2K international stocks, $1K real estate — losses in one area are cushioned by others."},
+{t:"Dividend",c:"Returns",d:"A portion of a company's earnings distributed to shareholders, typically paid quarterly in cash. Companies with growing, consistent dividends are prized for generating passive income.",e:"Coca-Cola pays about $0.46/share quarterly. Own 100 shares? You collect ~$184/year simply for holding the stock."},
+{t:"Dividend Yield",c:"Returns",d:"Annual dividends per share divided by the current stock price, expressed as a percentage. It shows what percentage of your investment comes back as income annually from dividends alone.",e:"Stock at $50 paying $2/year in dividends = 4% dividend yield. A falling stock price inflates yield — sometimes a warning sign, not just a bargain."},
+{t:"Dollar-Cost Averaging",c:"Trading Strategies",d:"Investing a fixed dollar amount at regular intervals regardless of the market price. This removes the pressure of timing the market and automatically buys more shares when prices are low.",e:"Investing $500/month in an S&P 500 ETF regardless of market conditions — you accumulate more shares during downturns and build wealth steadily over time."},
+{t:"Dow Jones Industrial Average (DJIA)",c:"Market Indices",d:"A price-weighted stock market index tracking 30 large, blue-chip U.S. companies across major industries. One of the most widely cited indicators of U.S. stock market health.",e:"When the news says 'the Dow fell 500 points,' it means these 30 companies — Apple, Goldman Sachs, Nike, and others — collectively lost market value."},
+{t:"Earnings per Share (EPS)",c:"Financial Ratios",d:"A company's net profit divided by the number of outstanding shares. Higher EPS signals greater profitability. Quarterly EPS reports vs. analyst estimates often drive sharp stock moves.",e:"Net profit of $1B with 500M shares outstanding = EPS of $2.00. If analysts expected $1.80 and the company delivers $2.00, expect the stock to pop."},
+{t:"Economic Bubble",c:"Market Conditions",d:"When asset prices rise far above their intrinsic value due to speculative buying and euphoria, rather than fundamentals — typically followed by a sharp crash when reality sets in.",e:"The dot-com bubble (late 1990s): companies with zero profits traded at sky-high valuations. When it burst in 2000, the Nasdaq fell ~78% over two years."},
+{t:"Equal Weight Rating",c:"Analyst Ratings",d:"An analyst rating indicating a stock is expected to perform in line with the overall market or sector average. Equivalent to a 'Hold' or 'Neutral' — neither particularly bullish nor bearish.",e:"Morgan Stanley rates XYZ Corp 'Equal Weight' at $45 — they expect it to track the sector but see no compelling reason to overweight it in a portfolio."},
+{t:"Equity Income",c:"Returns",d:"Income generated from dividends paid by stocks (equities). Equity income funds specifically target high-dividend-paying stocks to provide investors with regular income streams.",e:"A retiree builds a portfolio of utility stocks and REITs yielding 4–5% annually — the quarterly dividends cover living expenses without selling shares."},
+{t:"Exchange",c:"Fundamentals",d:"A regulated marketplace where buyers and sellers trade securities, commodities, or derivatives. Exchanges ensure price transparency, fair order matching, and regulatory oversight.",e:"The NYSE and Nasdaq are the world's two largest stock exchanges, where trillions of dollars in equities change hands each trading day."},
+{t:"Exchange-Traded Funds (ETFs)",c:"Investment Vehicles",d:"Funds that track an index, sector, commodity, or basket of assets and trade on a stock exchange throughout the day like individual stocks — combining diversification with liquidity.",e:"Buy one share of SPY (S&P 500 ETF) and you instantly own a tiny piece of all 500 companies — broad diversification in a single, low-cost trade."},
+{t:"Expense Ratio",c:"Investment Vehicles",d:"The annual fee a mutual fund or ETF charges investors, expressed as a percentage of assets under management. It's automatically deducted from the fund's returns — lower is better.",e:"A 1% expense ratio on $10,000 costs $100/year. Vanguard's index funds charge as little as 0.03% — just $3/year on that same investment."},
+{t:"Futures",c:"Derivatives",d:"Standardized contracts obligating the buyer to purchase (or seller to sell) a specified asset at a predetermined price on a set future date. Used for hedging exposure and speculation.",e:"An airline buys oil futures at $80/barrel for delivery in 6 months. If oil surges to $100, they saved $20/barrel — protecting profits from fuel cost spikes."},
+{t:"Going Long",c:"Trading Strategies",d:"Buying a security with the expectation that its price will rise, allowing you to sell it later at a higher price for a profit. The most common investment position.",e:"You buy 50 shares of Tesla at $200 expecting growth to $300. That's a long position — you profit if the stock climbs and lose if it drops."},
+{t:"Going Short",c:"Trading Strategies",d:"Borrowing shares of a stock, selling them at the current price, then hoping to buy them back later at a lower price to return them and pocket the difference. Profits when prices fall.",e:"Borrow and sell 100 shares at $50. Price drops to $30. Buy back for $3,000, return the shares, and keep the $2,000 difference (minus borrowing fees)."},
+{t:"Growth and Income Funds",c:"Investment Vehicles",d:"Mutual funds seeking both capital appreciation (rising stock prices) and income (dividends/interest) — striking a balance between growth potential and cash flow generation.",e:"A Growth & Income fund might hold 60% dividend-paying blue-chips for income, 30% growth stocks for appreciation, and 10% bonds for stability."},
+{t:"Growth Stocks",c:"Stock Types",d:"Stocks of companies expected to grow revenues and earnings significantly faster than average. They typically reinvest profits to fuel expansion rather than paying dividends.",e:"Early Amazon: minimal profits, explosive revenue growth. Growth investors accepted low current earnings for the promise of enormous future returns."},
+{t:"Head and Shoulders Pattern",c:"Technical Analysis",d:"A chart pattern featuring three peaks — a higher middle peak (the 'head') between two lower peaks (the 'shoulders') — that signals a potential reversal from an uptrend to a downtrend.",e:"Stock rallies to $50 (left shoulder), retreats, surges to $65 (head), retreats, rallies to $50 (right shoulder), then breaks below the neckline — bearish reversal confirmed."},
+{t:"Index Funds",c:"Investment Vehicles",d:"Passively managed funds designed to replicate the performance of a market index by holding the same securities in the same proportions. Known for low costs and broad diversification.",e:"Vanguard's S&P 500 Index Fund holds all 500 companies. When the index gains 10%, the fund gains ~10% — no stock-picking, minimal fees, powerful long-term results."},
+{t:"Inflation",c:"Economics",d:"The rate at which the general level of prices for goods and services rises over time, eroding the purchasing power of money. Measured by indices like CPI and PCE.",e:"5% inflation means a $100 grocery bill last year costs $105 today — and cash sitting in a savings account earning 1% is quietly losing real value."},
+{t:"Initial Public Offering (IPO)",c:"Corporate Actions",d:"The process by which a private company first offers shares to the public on a stock exchange, allowing it to raise capital and giving existing investors a way to sell their stakes.",e:"Airbnb raised $3.5B in its December 2020 IPO. Early employees and venture investors finally had liquid shares they could sell on the open market."},
+{t:"Limit Order",c:"Order Types",d:"An order to buy or sell a security at a specific price or better. A buy limit won't fill above your price; a sell limit won't fill below it — giving you price control but not execution certainty.",e:"Stock at $100. Set a buy limit at $95 — your order waits and only executes if the price dips to $95 or lower."},
+{t:"Liquidity",c:"Market Mechanics",d:"How easily and quickly an asset can be converted to cash without significantly impacting its price. High liquidity means tight bid-ask spreads and fast order fills.",e:"Apple shares are highly liquid — sell $1M in seconds. A small-town commercial property is illiquid — finding a buyer could take months."},
+{t:"Margin",c:"Trading Strategies",d:"Borrowing money from a broker to purchase more securities than your own capital allows, using your portfolio as collateral. Leverage amplifies both gains and losses significantly.",e:"$5,000 cash + 2:1 margin = control $10,000 of stock. A 10% gain = $1,000 profit (20% return on your money). A 10% loss = $1,000 loss too — leverage cuts both ways."},
+{t:"Market Index",c:"Market Indices",d:"A statistical benchmark that tracks the performance of a group of stocks representing a segment of the market. Used by investors to gauge overall market health and compare portfolio performance.",e:"The S&P 500 tracks 500 large U.S. companies. If your portfolio returned 8% while the S&P returned 12%, you 'underperformed the benchmark.'"},
+{t:"Market Volatility",c:"Risk & Analysis",d:"The degree of price variation in a security or market over time. High volatility means large, rapid price swings in either direction. Often measured by the VIX ('fear index').",e:"In March 2020, the VIX spiked above 80 — extreme fear with the S&P 500 moving 5–10% daily. A calm market typically sees VIX around 12–18."},
+{t:"Moving Average",c:"Technical Analysis",d:"The average price of a security calculated over a specific number of periods, updated continuously. Smooths out short-term noise to reveal the underlying price trend.",e:"A 50-day moving average of $150 on a stock is watched closely — when price crosses above it, many traders interpret it as a bullish signal to buy."},
+{t:"Mutual Funds",c:"Investment Vehicles",d:"Pooled investment vehicles where many investors' money is combined and managed by professional portfolio managers who invest in a diversified mix of stocks, bonds, or other assets.",e:"You invest $1,000 in Fidelity Contrafund alongside thousands of others. Professionals actively manage the pooled capital across hundreds of holdings."},
+{t:"Nasdaq",c:"Market Indices",d:"Both a major U.S. stock exchange and a family of stock market indices. The Nasdaq Composite tracks all Nasdaq-listed stocks, which are heavily weighted toward technology and growth companies.",e:"Apple, Google, Amazon, Microsoft, and Meta all trade on Nasdaq. When tech sector does well, the Nasdaq typically outperforms the broader market indices."},
+{t:"Non-Fungible Token (NFT)",c:"Technology",d:"A unique digital asset verified and stored on a blockchain. Unlike cryptocurrencies (where each coin is identical), each NFT is one-of-a-kind and cannot be exchanged on a like-for-like basis.",e:"Artist Beeple sold a digital artwork NFT for $69 million in 2021. The buyer owns a blockchain-verified 'original' of the file — proven by an immutable ledger entry."},
+{t:"Order Imbalance",c:"Market Mechanics",d:"When buy orders significantly outnumber sell orders (or vice versa) for a security at a given time, potentially causing large price gaps, volatility, or temporary trading halts.",e:"After surprise earnings, a stock sees 10x normal buy orders with almost no sellers — an order imbalance. Exchanges may pause trading briefly to restore orderly markets."},
+{t:"OTC Stocks",c:"Market Mechanics",d:"Securities traded directly between parties 'over-the-counter' via dealer networks rather than on a formal exchange. Often includes smaller, foreign, or companies that don't meet exchange listing standards.",e:"Many penny stocks and foreign companies trade OTC. They face less regulatory oversight, often have wider bid-ask spreads, and carry higher execution risk."},
+{t:"Outstanding Shares",c:"Fundamentals",d:"The total number of a company's shares currently held by all shareholders — including institutional investors, retail investors, and company insiders.",e:"Apple has ~15.4 billion shares outstanding. Multiply by today's stock price and you get Apple's current market capitalization."},
+{t:"P/E Ratio",c:"Valuation",d:"Price-to-Earnings ratio: the current stock price divided by earnings per share. The most widely used valuation metric — it shows how much investors pay for each dollar of annual earnings.",e:"Stock at $100 with EPS of $5 = P/E of 20. Historical S&P average is ~15–25. A P/E of 50+ may signal overvaluation — or very high expected future growth."},
+{t:"Preferred Stock",c:"Stock Types",d:"A class of ownership in a company that has priority over common stock for dividends and assets in a liquidation. Preferred shareholders typically receive fixed dividends but usually have no voting rights.",e:"Berkshire Hathaway's preferred investment in Bank of America paid $300M/year in fixed dividends — Buffett was paid before common shareholders received a cent."},
+{t:"Price Quote",c:"Fundamentals",d:"The most recent price at which a security was traded, or the current bid and ask prices being shown in the market. Real-time quotes are live; delayed quotes lag by 15–20 minutes.",e:"Checking Apple: Last $182.45 | Bid $182.40 | Ask $182.50. The last is the most recent trade; bid/ask show what buyers and sellers are currently willing to transact at."},
+{t:"Profit Margin",c:"Financial Ratios",d:"Net income divided by revenue, expressed as a percentage. It shows how much of each dollar in revenue a company actually keeps as profit after all expenses are paid.",e:"$10M net profit on $100M revenue = 10% profit margin. Apple's net margin is ~25% — keeping $0.25 of every revenue dollar as profit."},
+{t:"Recession",c:"Economics",d:"A significant decline in economic activity lasting more than a few months. Technically defined as two consecutive quarters of negative GDP growth, though the official definition is broader.",e:"The Great Recession (2008–2009): U.S. GDP contracted for six consecutive quarters, unemployment rose from 4.7% to 10%, and the S&P 500 lost ~57% from peak to trough."},
+{t:"Risk Tolerance",c:"Portfolio Management",d:"An investor's ability and willingness to endure potential investment losses in pursuit of higher returns. Influenced by financial situation, time horizon, age, and emotional temperament.",e:"A 25-year-old with stable income can ride out a 50% crash — high risk tolerance. A retiree depending on savings for income needs low risk tolerance and preservation."},
+{t:"Roth IRA",c:"Retirement & Taxes",d:"An Individual Retirement Account funded with after-tax dollars. Investments grow completely tax-free, and qualified withdrawals in retirement are also tax-free — no taxes on the gains.",e:"Contribute $6,500, invest in index funds, and watch it grow to $100,000 by retirement. That entire $93,500 gain? The IRS doesn't touch a cent of it."},
+{t:"Sector",c:"Fundamentals",d:"A segment of the economy grouped by companies with similar business activities. The 11 GICS sectors include Technology, Healthcare, Financials, Energy, Consumer Discretionary, and more.",e:"When the Fed raises interest rates, Financials (banks, insurers) often outperform, while Real Estate and Utilities sectors tend to underperform due to higher borrowing costs."},
+{t:"Shares",c:"Fundamentals",d:"Units of ownership in a company or financial asset. Owning shares means owning a proportional piece of the company's assets, earnings, and future growth potential.",e:"If a company has 1,000 total shares and you own 10, you own 1% of the company — entitled to 1% of any dividends and 1% of assets if the company is ever sold."},
+{t:"Stock Option",c:"Derivatives",d:"A contract giving the holder the right — but not the obligation — to buy (call option) or sell (put option) shares at a predetermined price (strike price) before a set expiration date.",e:"You buy a call option to purchase Apple at $200 (strike). Apple rallies to $220 before expiry — you exercise the option, buy at $200, and pocket $20/share in profit."},
+{t:"Stock Portfolio",c:"Portfolio Management",d:"A collection of financial investments — stocks, bonds, ETFs, cash — held by an individual or institution. A thoughtfully constructed portfolio balances risk and return according to the investor's goals.",e:"Sample portfolio: 40% S&P 500 ETF, 20% bonds, 20% international ETF, 10% REIT, 10% individual stocks — diversified for long-term growth with managed risk."},
+{t:"Stock Split",c:"Corporate Actions",d:"When a company increases its total share count by dividing existing shares, reducing the price per share proportionally. Total market cap is unchanged — it's cosmetic, but can improve accessibility.",e:"Apple's 4-for-1 split in 2020: a $400 share became four $100 shares. You had 10 shares worth $4,000; now 40 shares worth $4,000 — same total value, lower price per share."},
+{t:"Time Horizon",c:"Portfolio Management",d:"The length of time an investor plans to hold an investment before needing the funds. Longer horizons allow for more risk-taking; shorter horizons demand more conservative, capital-preserving choices.",e:"30-year retirement savings horizon → heavy stock allocation. Saving for a house down payment in 2 years → bonds and high-yield savings to protect capital."},
+{t:"Value Stocks",c:"Stock Types",d:"Stocks trading below what analysts believe their intrinsic value should be, often sporting low P/E or P/B ratios. Value investors seek these 'bargain' stocks expecting the market to eventually correct.",e:"Warren Buffett bought Coca-Cola in 1988 when it appeared undervalued relative to its cash flows and brand. That investment has since returned over 16x his purchase price."},
+{t:"Volume",c:"Market Mechanics",d:"The total number of shares (or contracts) traded in a security over a given period. High volume confirms price moves with conviction; low volume signals weak participation and potentially false breakouts.",e:"A stock normally trades 1M shares/day. On earnings day it trades 15M — high volume validates the move and shows strong institutional interest in the direction."},
+{t:"Volume-Weighted Average Price (VWAP)",c:"Technical Analysis",d:"The average price of a security weighted by trading volume throughout the trading day. Institutional traders use it as a benchmark — buying below VWAP is considered favorable execution.",e:"VWAP is $50 at 2 PM. A trader executes a buy at $48.50 — below VWAP — considered a quality fill. Large funds aim to buy near or below VWAP to minimize market impact."},
+{t:"Yield",c:"Returns",d:"The income generated by an investment expressed as a percentage of its cost or current market value. Encompasses dividend yield on stocks and coupon yield on bonds.",e:"A bond purchased for $1,000 paying $60/year = 6% yield. If the bond's market price rises to $1,200, the yield drops to 5% — bond prices and yields always move inversely."},
+{t:"52-Week Range",c:"Price Analysis",d:"The highest and lowest prices at which a stock has traded over the past 52 weeks. Helps investors gauge whether a stock is near historical highs, lows, or somewhere in between.",e:"Tesla's 52-week range: $138–$280. Currently at $248, it's near the top. Some view this as potentially overbought; momentum traders see it as strength."},
+{t:"Equity",c:"Fundamentals",d:"Ownership interest in a company, represented by shares of stock. Also refers to a company's net worth: Total Assets minus Total Liabilities equals Shareholders' Equity.",e:"A house worth $300K with a $200K mortgage has $100K in home equity. Similarly, a company with $5M in assets and $3M in liabilities has $2M in shareholders' equity."}
+];
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let order=[...Array(T.length).keys()];
+let ci=0,flipped=false;
+const known=new Set();
+let QS={qs:[],qi:0,score:0,streak:0,best:0,done:false};
+let activeCat='All';
+
+// ═══════════════════════════════════════════════
+//  TICKER
+// ═══════════════════════════════════════════════
+(function buildTicker(){
+  const stocks=[
+    {s:'AAPL',p:'182.50',d:'+2.3%',up:true},{s:'MSFT',p:'378.91',d:'+1.1%',up:true},
+    {s:'GOOGL',p:'141.80',d:'-0.5%',up:false},{s:'AMZN',p:'178.25',d:'+0.8%',up:true},
+    {s:'TSLA',p:'248.00',d:'-1.2%',up:false},{s:'META',p:'512.44',d:'+3.1%',up:true},
+    {s:'NVDA',p:'875.20',d:'+4.7%',up:true},{s:'BRK.B',p:'358.10',d:'+0.3%',up:true},
+    {s:'JPM',p:'196.50',d:'-0.2%',up:false},{s:'V',p:'264.80',d:'+0.9%',up:true},
+    {s:'NFLX',p:'612.30',d:'+2.0%',up:true},{s:'DIS',p:'91.40',d:'-0.7%',up:false},
+    {s:'BA',p:'198.50',d:'-1.5%',up:false},{s:'GS',p:'453.20',d:'+1.4%',up:true},
+    {s:'XOM',p:'110.80',d:'+0.6%',up:true}
+  ];
+  const el=document.getElementById('ticker');
+  // Render twice for seamless loop
+  for(let pass=0;pass<2;pass++){
+    stocks.forEach(st=>{
+      el.innerHTML+=`<span class="tick"><span class="tick-sym">${st.s}</span><span class="tick-px">${st.p}</span><span class="${st.up?'tick-up':'tick-dn'}">${st.d}</span></span>`;
+    });
+  }
+})();
+
+// ═══════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════
+function go(mode){
+  ['fc','quiz','browse'].forEach(id=>document.getElementById(id).style.display='none');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(mode).style.display='block';
+  document.querySelectorAll('.tab')[['fc','quiz','browse'].indexOf(mode)].classList.add('on');
+  if(mode==='quiz') startQuiz();
+  if(mode==='browse') initBrowse();
+}
+
+// ═══════════════════════════════════════════════
+//  FLASHCARDS
+// ═══════════════════════════════════════════════
+function renderCard(){
+  const item=T[order[ci]];
+  document.getElementById('fCat').textContent=item.c;
+  document.getElementById('fTerm').textContent=item.t;
+  document.getElementById('fDef').textContent=item.d;
+  document.getElementById('fEg').textContent='💡 '+item.e;
+  document.getElementById('fcCounter').textContent=`CARD ${ci+1} OF ${T.length}`;
+  document.getElementById('fcKnown').textContent=known.size+' mastered';
+  document.getElementById('fcBar').style.width=((ci+1)/T.length*100).toFixed(1)+'%';
+  const card=document.getElementById('card');
+  flipped=false;
+  card.classList.remove('flip');
+  card.classList.add('slide');
+  setTimeout(()=>card.classList.remove('slide'),300);
+}
+function flip(){
+  flipped=!flipped;
+  document.getElementById('card').classList.toggle('flip',flipped);
+}
+function next(){ci=(ci+1)%T.length;renderCard();}
+function prev(){ci=(ci-1+T.length)%T.length;renderCard();}
+function mark(yes){
+  yes?known.add(order[ci]):known.delete(order[ci]);
+  document.getElementById('sKnown').textContent=known.size;
+  doFlash(yes?'green':'red');
+  next();
+}
+function shuffle(){
+  order=order.sort(()=>Math.random()-.5);
+  ci=0;renderCard();
+}
+function doFlash(c){
+  const f=document.getElementById('flash');
+  f.className='flash go-'+c;
+  setTimeout(()=>f.className='flash',500);
+}
+
+// ═══════════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════════
+function genQuiz(){
+  const shuffled=[...T].sort(()=>Math.random()-.5);
+  return shuffled.map(item=>{
+    // Randomly ask: "define the term" OR "identify from definition"
+    const askDef=Math.random()<.5;
+    const distractors=[...T].filter(x=>x.t!==item.t).sort(()=>Math.random()-.5).slice(0,3);
+    let question,correct,opts;
+    if(askDef){
+      question=`What does <strong style="color:var(--blue)">"${item.t}"</strong> mean?`;
+      correct=item.d;
+      opts=[correct,...distractors.map(x=>x.d)].sort(()=>Math.random()-.5);
+    } else {
+      question=`Which term matches this definition?<br><br><em style="color:#99aacc">"${item.d}"</em>`;
+      correct=item.t;
+      opts=[correct,...distractors.map(x=>x.t)].sort(()=>Math.random()-.5);
+    }
+    return{item,question,correct,opts,askDef};
+  });
+}
+function startQuiz(){
+  QS={qs:genQuiz(),qi:0,score:0,streak:0,best:0,done:false};
+  renderQ();
+}
+function renderQ(){
+  const{qs,qi,score,streak}=QS;
+  if(qi>=qs.length){renderQEnd();return;}
+  const q=qs[qi];
+  const pct=(qi/qs.length*100).toFixed(0);
+  document.getElementById('qBar').style.width=pct+'%';
+  document.getElementById('qScoreTxt').innerHTML=`<span>${score}</span>/${qi}`;
+  document.getElementById('qStreakN').textContent=streak;
+  const L=['A','B','C','D'];
+  document.getElementById('qBody').innerHTML=`
+    <div class="qcard">
+      <div class="qlbl">QUESTION ${qi+1} OF ${qs.length}</div>
+      <div class="qbadge">${q.askDef?'DEFINE THE TERM':'IDENTIFY THE TERM'}</div>
+      <div class="qtxt">${q.question}</div>
+    </div>
+    <div class="qopts">
+      ${q.opts.map((o,i)=>`
+        <button class="qopt" id="qo${i}" onclick="answer(${i})">
+          <span class="ol">${L[i]}</span><span>${o}</span>
+        </button>`).join('')}
+    </div>
+    <div id="qfb" class="qfb"></div>
+    <button class="nxtbtn" id="nxtBtn" onclick="nextQ()">NEXT →</button>
+  `;
+  QS.answered=false;
+}
+function answer(idx){
+  if(QS.answered)return;
+  QS.answered=true;
+  const q=QS.qs[QS.qi];
+  const ok=q.opts[idx]===q.correct;
+  const ci2=q.opts.indexOf(q.correct);
+  document.querySelectorAll('.qopt').forEach(b=>b.classList.add('dis'));
+  document.getElementById('qo'+ci2).classList.add('ok');
+  if(ok){
+    QS.score++;QS.streak++;
+    if(QS.streak>QS.best)QS.best=QS.streak;
+    if(QS.best>parseInt(document.getElementById('sStreak').textContent||0))
+      document.getElementById('sStreak').textContent=QS.best;
+    doFlash('green');
+    const streak_msg=QS.streak>=5?` 🔥 ${QS.streak} in a row!`:QS.streak>=3?' Nice streak!':'';
+    showFB(true,`✓ Correct!${streak_msg}`,`💡 ${q.item.e}`);
+  } else {
+    QS.streak=0;
+    document.getElementById('qo'+idx).classList.add('bad');
+    doFlash('red');
+    showFB(false,'✗ Incorrect',`The correct answer is: <strong style="color:var(--green)">${q.correct}</strong>`);
+  }
+  document.getElementById('qScoreTxt').innerHTML=`<span>${QS.score}</span>/${QS.qi+1}`;
+  document.getElementById('qStreakN').textContent=QS.streak;
+  document.getElementById('nxtBtn').style.display='block';
+}
+function showFB(ok,head,body){
+  const fb=document.getElementById('qfb');
+  fb.className='qfb '+(ok?'ok':'bad');
+  fb.style.display='block';
+  fb.innerHTML=`<div class="fbh ${ok?'ok':'bad'}">${head}</div><div class="fbt">${body}</div>`;
+}
+function nextQ(){QS.qi++;renderQ();}
+function renderQEnd(){
+  const{score,qs,best}=QS;
+  const pct=Math.round(score/qs.length*100);
+  let grade,col;
+  if(pct>=90){grade='Wall Street Analyst 🏆';col=var_('gold');}
+  else if(pct>=75){grade='Junior Trader ⭐';col=var_('green');}
+  else if(pct>=60){grade='Market Student 📚';col=var_('blue');}
+  else{grade='Keep Studying! 💪';col=var_('orange');}
+  document.getElementById('sScore').textContent=pct+'%';
+  document.getElementById('sStreak').textContent=best;
+  document.getElementById('qBar').style.width='100%';
+  document.getElementById('qBody').innerHTML=`
+    <div class="qend">
+      <h2>Quiz Complete!</h2>
+      <div class="big">${pct}%</div>
+      <div class="grade" style="color:${col}">${grade}</div>
+      <p style="color:var(--dim);margin-bottom:22px">
+        ${score} / ${qs.length} correct &nbsp;·&nbsp; Best streak: ${best} 🔥
+      </p>
+      <button class="rbtn" onclick="startQuiz()">Retry Quiz</button>
+      <button class="rbtn" onclick="go('fc')">Study Flashcards</button>
+      <button class="rbtn" onclick="go('browse')">Browse All Terms</button>
+    </div>`;
+}
+function var_(n){return getComputedStyle(document.documentElement).getPropertyValue('--'+n).trim();}
+
+// ═══════════════════════════════════════════════
+//  BROWSE
+// ═══════════════════════════════════════════════
+function initBrowse(){
+  const cats=['All',...new Set(T.map(x=>x.c))].sort();
+  const cf=document.getElementById('catf');
+  cf.innerHTML=cats.map(c=>`<button class="catbtn${c==='All'?' on':''}" onclick="setCat('${c}',this)">${c}</button>`).join('');
+  renderBrowse();
+}
+function setCat(cat,btn){
+  activeCat=cat;
+  document.querySelectorAll('.catbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderBrowse();
+}
+function filterBrowse(){renderBrowse();}
+function renderBrowse(){
+  const q=(document.getElementById('srch').value||'').toLowerCase();
+  let list=T;
+  if(activeCat!=='All') list=list.filter(x=>x.c===activeCat);
+  if(q) list=list.filter(x=>x.t.toLowerCase().includes(q)||x.d.toLowerCase().includes(q)||x.c.toLowerCase().includes(q));
+  const grid=document.getElementById('termsGrid');
+  if(!list.length){
+    grid.innerHTML=`<div class="no-results">No terms match your search.</div>`;
+    return;
+  }
+  grid.innerHTML=list.map((item,i)=>`
+    <div class="tc" id="tc${i}" onclick="toggleTC(${i})">
+      <div class="tc-hdr">
+        <span class="tc-name">${item.t}</span>
+        <span class="tc-arr">▶</span>
+      </div>
+      <div class="tc-body">
+        <div class="tc-txt">
+          <span class="tc-tag">${item.c}</span><br>
+          ${item.d}<br><br>
+          <em style="color:var(--dim)">💡 ${item.e}</em>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function toggleTC(i){document.getElementById('tc'+i).classList.toggle('open');}
+
+// ═══════════════════════════════════════════════
+//  KEYBOARD
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  const mode=document.getElementById('fc').style.display!=='none'?'fc':
+             document.getElementById('quiz').style.display!=='none'?'quiz':'browse';
+  if(mode==='fc'){
+    if(e.key==='ArrowRight')next();
+    else if(e.key==='ArrowLeft')prev();
+    else if(e.key===' '){e.preventDefault();flip();}
+    else if(e.key==='g'||e.key==='G')mark(true);
+    else if(e.key==='s'||e.key==='S')mark(false);
+  } else if(mode==='quiz'){
+    const i='abcd'.indexOf(e.key.toLowerCase());
+    if(i!==-1&&!QS.answered)answer(i);
+    if(e.key==='Enter'&&QS.answered){
+      const nb=document.getElementById('nxtBtn');
+      if(nb&&nb.style.display==='block')nextQ();
+    }
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+renderCard();
+</script>
+</body>
+</html>
